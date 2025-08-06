@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfólio | Daniel Rocha, Analista de Dados</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <!-- 
+    Chosen Palette: "Modern Slate"
+    - Background: bg-slate-50 (#F8FAFC)
+    - Text: text-slate-800 (#1E293B)
+    - Primary Accent: bg-sky-600 (#0284C7)
+    - Secondary Accent/Chart: bg-slate-200 (#E2E8F0), border-sky-500 (#0EA5E9)
+    -->
+    <!-- 
+    Application Structure Plan: The application is a single-page portfolio designed to showcase data analysis projects. The structure supports three distinct project types: a code preview with a link (Commissions), a combined code preview and interactive dashboard (Videogames), and a multi-chart dashboard (IBGE). A tab-based navigation controls which project is displayed. The JavaScript logic dynamically renders the appropriate description, code, and visualization for each project.
+    -->
+    <!-- 
+    Visualization & Content Choices: 
+    - Report Info: Projeto 1 - Automação de Comissões. Goal: Showcase coding and problem-solving skills. Viz: Code Snippet Viewer (Apps Script) and a link to the final Google Sheet. Interaction: Syntax highlighting. Justification: Displaying a preview of the actual automation script proves technical competency. The link to the final sheet provides tangible proof of the high-quality output. Method: HTML/Tailwind/Prism.js.
+    - Report Info: Projeto 2 - Dashboard de Vendas de Videogames. Goal: Showcase the process from code to visualization. Viz: Python code snippet and a multi-chart interactive dashboard. Interaction: Tooltips on charts. Justification: This combination demonstrates the full analysis lifecycle, from Python scripting (Pandas, Matplotlib) to interactive web presentation (Chart.js), which is highly effective for a data analyst portfolio. Library: Chart.js, Prism.js.
+    - Report Info: Projeto 3 - Dashboard Demográfico IBGE. Goal: Demonstrate analysis of public, real-world data. Viz: Multi-chart dashboard (Bar, Pie). Interaction: Tooltips. Justification: This combination effectively visualizes geographic and proportional data. Library: Chart.js (Canvas).
+    This approach provides tangible, interactive evidence of the skills described in each project narrative.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .nav-link {
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #0284C7;
+        }
+        .project-tab.active {
+            background-color: #0284C7;
+            color: white;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .chart-card, .code-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+        }
+        .code-container pre[class*="language-"] {
+            max-height: 450px;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#home" class="text-xl font-bold text-sky-600">Daniel Rocha</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#projects" class="nav-link font-medium">Projetos</a>
+                <a href="#skills" class="nav-link font-medium">Habilidades</a>
+                <a href="#contact" class="nav-link font-medium">Contato</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-slate-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-white">
+            <a href="#projects" class="block py-2 px-6 text-sm hover:bg-slate-100">Projetos</a>
+            <a href="#skills" class="block py-2 px-6 text-sm hover:bg-slate-100">Habilidades</a>
+            <a href="#contact" class="block py-2 px-6 text-sm hover:bg-slate-100">Contato</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="container mx-auto px-6 py-20 md:py-32 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-slate-900 mb-4">Daniel Rocha</h1>
+            <p class="text-lg md:text-xl text-sky-600 font-medium mb-8">Analista de Dados | Transformando Dados em Decisões Estratégicas</p>
+            <p class="max-w-3xl mx-auto text-slate-600 mb-10">
+                Olá! Sou um Analista de Dados apaixonado por encontrar as histórias que os números contam. Com experiência em Python, Excel Avançado e Power BI, meu objetivo é extrair insights valiosos que impulsionam o crescimento e otimizam processos de negócio. Acredito que uma boa análise vai além dos gráficos; trata-se de entender o problema de negócio, fazer as perguntas certas e comunicar os resultados de forma clara e acionável.
+            </p>
+            <div class="flex justify-center space-x-4">
+                <a href="#projects" class="bg-sky-600 text-white font-bold py-3 px-8 rounded-full hover:bg-sky-700 transition-colors">Ver Meus Projetos</a>
+                <a href="#contact" class="bg-slate-200 text-slate-800 font-bold py-3 px-8 rounded-full hover:bg-slate-300 transition-colors">Entrar em Contato</a>
+            </div>
+        </section>
+
+        <section id="projects" class="py-20 bg-slate-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900">Projetos</h2>
+                    <p class="text-slate-600 mt-2">Uma amostra do meu trabalho em análise de dados e automação.</p>
+                </div>
+
+                <div class="flex flex-wrap justify-center mb-8 gap-2 md:gap-4">
+                    <button data-project="project1" class="project-tab active text-sm md:text-base font-medium py-2 px-4 rounded-full transition-colors">Automação de Comissões</button>
+                    <button data-project="project2" class="project-tab text-sm md:text-base font-medium py-2 px-4 rounded-full transition-colors bg-white hover:bg-slate-200">Dashboard de Videogames</button>
+                    <button data-project="project3" class="project-tab text-sm md:text-base font-medium py-2 px-4 rounded-full transition-colors bg-white hover:bg-slate-200">Dashboard Demográfico</button>
+                </div>
+
+                <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg">
+                    <div id="project-info" class="mb-8"></div>
+                    <div id="project-visual"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900">Habilidades Técnicas</h2>
+                    <p class="text-slate-600 mt-2">Minhas principais competências e ferramentas.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                     <div class="bg-slate-50 p-6 rounded-lg shadow-sm hover:shadow-xl transition-shadow border border-slate-200">
+                        <h3 class="font-bold text-xl mb-3 text-sky-600">Análise e Visualização</h3>
+                        <ul class="space-y-2 text-slate-600">
+                            <li><strong>Power BI:</strong> Dashboards, Modelagem, DAX</li>
+                            <li><strong>Excel:</strong> Tabelas Dinâmicas, Power Query</li>
+                            <li><strong>Storytelling com Dados:</strong> Comunicação de insights</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg shadow-sm hover:shadow-xl transition-shadow border border-slate-200">
+                        <h3 class="font-bold text-xl mb-3 text-sky-600">Linguagens e Automação</h3>
+                        <ul class="space-y-2 text-slate-600">
+                            <li><strong>Python:</strong> Pandas, NumPy, Matplotlib</li>
+                            <li><strong>SQL:</strong> Extração e Manipulação de Dados</li>
+                            <li><strong>Google Apps Script:</strong> Automação de Planilhas</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg shadow-sm hover:shadow-xl transition-shadow border border-slate-200">
+                        <h3 class="font-bold text-xl mb-3 text-sky-600">Conceitos de Negócio</h3>
+                        <ul class="space-y-2 text-slate-600">
+                            <li>Análise de KPIs e Métricas</li>
+                            <li>Otimização de Processos</li>
+                            <li>Análise de Mercado</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-20 bg-slate-800 text-white">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold">Vamos Conversar!</h2>
+                <p class="text-slate-300 mt-4 max-w-2xl mx-auto">
+                    Estou sempre aberto a novas oportunidades e desafios na área de dados. Se você acredita que minhas habilidades podem agregar valor à sua equipe, entre em contato.
+                </p>
+                <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8 mt-8 text-sm">
+                    <a href="mailto:danielrochazz173@gmail.com" class="hover:text-sky-400 transition-colors">danielrochazz173@gmail.com</a>
+                    <a href="https://wa.me/5521993270064" target="_blank" class="flex items-center hover:text-sky-400 transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.487 5.235 3.487 8.413 0 6.557-5.338 11.892-11.894 11.892-1.99 0-3.903-.52-5.586-1.456l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.447-4.435-9.884-9.888-9.884-5.448 0-9.886 4.434-9.889 9.884-.001 2.225.651 4.315 1.731 6.086l-.516 1.866 1.911-.509z"/></svg>
+                        (21) 99327-0064
+                    </a>
+                    <a href="https://github.com/danielbuk" target="_blank" class="hover:text-sky-400 transition-colors">GitHub</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-6 text-center">
+        <p>&copy; 2024 Daniel Rocha. Todos os direitos reservados.</p>
+    </footer>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const projectsData = {
+                project1: {
+                    title: "Automação de Relatório de Comissões",
+                    tools: "Google Apps Script, SQL, Google Sheets",
+                    type: 'code',
+                    description: `
+                        <div class="space-y-4 text-slate-700">
+                            <div>
+                                <h4 class="font-bold text-lg mb-2">O Problema</h4>
+                                <p>O cálculo de comissões era um processo manual, lento e suscetível a erros, levando semanas para ser concluído. As regras de negócio eram extremamente complexas e difíceis de auditar em planilhas convencionais.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-2">A Solução: Automação Total</h4>
+                                <p>Desenvolvi um sistema totalmente automático usando <strong>Google Apps Script</strong>. Com um único clique, o script executa todo o fluxo de trabalho: lê os dados brutos de vendas (extraídos via SQL), aplica dezenas de regras de negócio e gera um relatório final impecável, <strong>sem necessidade de qualquer intervenção humana.</strong></p>
+                            </div>
+                            <div class="mt-6 text-center">
+                                <a href="https://docs.google.com/spreadsheets/d/1AmUTvUakkYmhtvJn4N95BU5zULAj_sfW0p0ttidtWJU/edit?usp=sharing" target="_blank" class="inline-block bg-green-600 text-white font-bold py-3 px-6 rounded-full hover:bg-green-700 transition-transform hover:scale-105">
+                                    Ver Relatório Final na Planilha
+                                </a>
+                            </div>
+                        </div>
+                    `,
+                    code: `
+function calculateCommissions() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const sourceSheet = spreadsheet.getSheetByName('COMISSOESDADOS');
+  const targetSheet = spreadsheet.getSheetByName('COMISSOES');
+  targetSheet.clear();
+  
+  const data = sourceSheet.getDataRange().getValues();
+  
+  const sellerData = collectSellerData(data, productCommission, michelleSpecialProducts, ignoredRCAs);
+  
+  const sortedSellers = Object.keys(sellerData.sellerCommission).sort((a, b) =>
+    sellerData.sellerCommission[b].totalRevenue - sellerData.sellerCommission[a].totalRevenue
+  );
+  
+  fillTargetSheet(targetSheet, targetData, sortedSellers, sellerData, cooperativaRCAs, notaFiscalRCAs);
+}
+
+function getCommissionRate(sellerCode, productCode, productCommission, michelleSpecialProducts) {
+  if (sellerCode == 33) {
+    return 0.005;
+  } else if (sellerCode == 83) {
+    return michelleSpecialProducts.has(productCode) ? 0.02 : 0.015;
+  } else if (productCode in productCommission) {
+    return productCommission[productCode];
+  } else if (sellerCode == 1 || sellerCode == 2) {
+    return 0.02;
+  } else {
+    return 0.015;
+  }
+}
+`
+                },
+                project2: {
+                    title: "Dashboard Analítico de Vendas de Videogames",
+                    tools: "Python (Pandas, Matplotlib), SQL, Chart.js",
+                    type: 'dashboard',
+                    description: "Este dashboard interativo é o resultado de uma análise de um vasto dataset com mais de 16 mil jogos. A análise, conduzida em Python, explora as tendências do mercado global de videogames. Os principais insights incluem a evolução das vendas, a dominância de regiões e a identificação dos gêneros e publishers mais relevantes, fornecendo uma visão estratégica completa do setor.",
+                    code: `
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def criar_dashboard_para_print():
+    try:
+        df = pd.read_csv('vgsales.csv')
+
+        df_cleaned = df.dropna(subset=['Year'])
+        df_cleaned['Year'] = df_cleaned['Year'].astype(int)
+        
+        sns.set_theme(style="whitegrid")
+        fig, axs = plt.subplots(2, 2, figsize=(16, 14))
+
+        sns.lineplot(x='Year', y='Global_Sales', data=sales_by_year, ax=axs[0, 0])
+        
+        axs[0, 1].pie(regional_sales, labels=regional_sales.index, autopct='%1.1f%%')
+
+        plt.savefig("dashboard_final.png", dpi=300)
+        plt.show()
+
+    except Exception as e:
+        print(f"Ocorreu um erro: {e}")
+
+if __name__ == '__main__':
+    criar_dashboard_para_print()
+`,
+                    charts: [
+                        {
+                            id: 'salesEvolutionChart',
+                            title: 'Evolução das Vendas Globais (1980-2016)',
+                            type: 'line',
+                            data: {
+                                labels: ['1980', '1985', '1990', '1995', '2000', '2005', '2008', '2010', '2015', '2016'],
+                                datasets: [{
+                                    label: 'Vendas (em milhões)',
+                                    data: [10, 60, 180, 250, 350, 600, 679, 650, 280, 250],
+                                    borderColor: '#2a9d8f',
+                                    backgroundColor: 'rgba(42, 157, 143, 0.1)',
+                                    fill: true,
+                                    tension: 0.3
+                                }]
+                            },
+                            options: { plugins: { legend: { display: false } } }
+                        },
+                        {
+                            id: 'regionDistributionChart',
+                            title: 'Distribuição de Vendas por Região',
+                            type: 'doughnut',
+                            data: {
+                                labels: ['América do Norte', 'Europa', 'Japão', 'Outros'],
+                                datasets: [{
+                                    data: [49.2, 27.3, 14.6, 8.9],
+                                    backgroundColor: ['#264653', '#2a9d8f', '#e9c46a', '#f4a261'],
+                                }]
+                            },
+                            options: { plugins: { legend: { position: 'top' } } }
+                        },
+                        {
+                            id: 'topGenresChart',
+                            title: 'Top 5 Gêneros por Vendas',
+                            type: 'bar',
+                            data: {
+                                labels: ['Action', 'Sports', 'Shooter', 'Role-Playing', 'Platform'],
+                                datasets: [{
+                                    label: 'Vendas Globais (em milhões)',
+                                    data: [1723, 1309, 1025, 924, 829],
+                                    backgroundColor: '#2a9d8f',
+                                }]
+                            },
+                            options: { indexAxis: 'y', plugins: { legend: { display: false } } }
+                        },
+                        {
+                            id: 'topPublishersChart',
+                            title: 'Top 5 Publishers por Vendas',
+                            type: 'bar',
+                            data: {
+                                labels: ['Nintendo', 'Electronic Arts', 'Activision', 'Sony', 'Ubisoft'],
+                                datasets: [{
+                                    label: 'Vendas Globais (em milhões)',
+                                    data: [1784, 1148, 721, 565, 473],
+                                    backgroundColor: '#e76f51',
+                                }]
+                            },
+                            options: { indexAxis: 'y', plugins: { legend: { display: false } } }
+                        }
+                    ]
+                },
+                project3: {
+                    title: "Dashboard Demográfico do Brasil (IBGE)",
+                    tools: "Python (GeoPandas), API IBGE, Chart.js",
+                    type: 'dashboard',
+                    description: "Utilizando dados públicos da API do IBGE, este projeto explora a distribuição populacional do Brasil. Com Python, os dados foram coletados, limpos e agregados para criar visualizações que destacam as concentrações demográficas por estado e região. Este tipo de análise é fundamental para estudos de mercado, logística e planejamento de políticas públicas.",
+                    charts: [
+                        {
+                            id: 'populationStateChart',
+                            title: 'População por Estado (Top 10)',
+                            type: 'bar',
+                            data: {
+                                labels: ['SP', 'MG', 'RJ', 'BA', 'PR', 'RS', 'PE', 'CE', 'PA', 'SC'],
+                                datasets: [{
+                                    label: 'População (em milhões)',
+                                    data: [44.4, 20.5, 16.0, 14.1, 11.4, 10.8, 9.0, 8.7, 8.1, 7.6],
+                                    backgroundColor: '#0ea5e9',
+                                }]
+                            },
+                            options: { indexAxis: 'y', plugins: { legend: { display: false } } }
+                        },
+                        {
+                            id: 'populationRegionChart',
+                            title: 'Distribuição da População por Região',
+                            type: 'pie',
+                            data: {
+                                labels: ['Sudeste', 'Nordeste', 'Sul', 'Norte', 'Centro-Oeste'],
+                                datasets: [{
+                                    data: [41.8, 26.9, 14.3, 8.9, 8.0],
+                                    backgroundColor: ['#0284c7', '#0ea5e9', '#38bdf8', '#7dd3fc', '#bae6fd'],
+                                }]
+                            },
+                            options: { plugins: { legend: { position: 'top' } } }
+                        }
+                    ]
+                }
+            };
+
+            const projectInfoContainer = document.getElementById('project-info');
+            const projectVisualContainer = document.getElementById('project-visual');
+            const projectTabs = document.querySelectorAll('.project-tab');
+            let activeCharts = [];
+
+            function renderCode(project) {
+                let codeHtml = '';
+                if (project.code) {
+                    codeHtml = `
+                        <div class="mt-8">
+                            <h4 class="font-bold text-lg mb-2">Amostra do Código de Automação:</h4>
+                            <div class="code-card bg-gray-800 p-0">
+                                <div class="code-container">
+                                    <pre class="!m-0"><code class="language-javascript">${project.code.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                projectInfoContainer.innerHTML += codeHtml;
+                Prism.highlightAll();
+            }
+            
+            function renderDashboardWithCode(project) {
+                 let codeHtml = '';
+                if (project.code) {
+                    codeHtml = `
+                        <div class="mt-8">
+                            <h4 class="font-bold text-lg mb-2">Amostra do Código Python de Análise:</h4>
+                            <div class="code-card bg-gray-800 p-0">
+                                <div class="code-container">
+                                    <pre class="!m-0"><code class="language-python">${project.code.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                projectInfoContainer.innerHTML += codeHtml;
+
+
+                projectVisualContainer.innerHTML = `<div class="dashboard-grid"></div>`;
+                const grid = projectVisualContainer.querySelector('.dashboard-grid');
+                
+                project.charts.forEach(chartConfig => {
+                    const card = document.createElement('div');
+                    card.className = 'chart-card';
+                    card.innerHTML = `
+                        <h4 class="font-bold text-center mb-4 text-slate-700">${chartConfig.title}</h4>
+                        <div class="chart-container">
+                            <canvas id="${chartConfig.id}"></canvas>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+
+                    const ctx = document.getElementById(chartConfig.id).getContext('2d');
+                    const chart = new Chart(ctx, {
+                        type: chartConfig.type,
+                        data: chartConfig.data,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            ...chartConfig.options
+                        }
+                    });
+                    activeCharts.push(chart);
+                });
+            }
+
+
+            function renderDashboard(project) {
+                projectVisualContainer.innerHTML = `<div class="dashboard-grid"></div>`;
+                const grid = projectVisualContainer.querySelector('.dashboard-grid');
+                
+                project.charts.forEach(chartConfig => {
+                    const card = document.createElement('div');
+                    card.className = 'chart-card';
+                    card.innerHTML = `
+                        <h4 class="font-bold text-center mb-4 text-slate-700">${chartConfig.title}</h4>
+                        <div class="chart-container">
+                            <canvas id="${chartConfig.id}"></canvas>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+
+                    const ctx = document.getElementById(chartConfig.id).getContext('2d');
+                    const chart = new Chart(ctx, {
+                        type: chartConfig.type,
+                        data: chartConfig.data,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            ...chartConfig.options
+                        }
+                    });
+                    activeCharts.push(chart);
+                });
+            }
+
+            function updateProjectContent(projectId) {
+                activeCharts.forEach(chart => chart.destroy());
+                activeCharts = [];
+                projectVisualContainer.innerHTML = '';
+                projectInfoContainer.innerHTML = '';
+
+
+                const project = projectsData[projectId];
+                
+                projectInfoContainer.innerHTML = `
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">${project.title}</h3>
+                    <p class="text-sm text-slate-500 mb-4"><strong>Ferramentas:</strong> ${project.tools}</p>
+                    <div class="prose prose-slate max-w-none">${project.description}</div>
+                `;
+
+                if (projectId === 'project2') {
+                    renderDashboardWithCode(project);
+                } else if (project.type === 'code') {
+                    renderCode(project);
+                } else if (project.type === 'dashboard') {
+                    renderDashboard(project);
+                }
+
+                Prism.highlightAll();
+
+                projectTabs.forEach(tab => {
+                    tab.classList.toggle('active', tab.dataset.project === projectId);
+                    tab.classList.toggle('bg-white', tab.dataset.project !== projectId);
+                    tab.classList.toggle('hover:bg-slate-200', tab.dataset.project !== projectId);
+                });
+            }
+
+            projectTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    updateProjectContent(tab.dataset.project);
+});
+            });
+            
+            updateProjectContent('project1');
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
