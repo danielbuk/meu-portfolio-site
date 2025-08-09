@@ -10,24 +10,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
-    <!-- 
-    Chosen Palette: "Modern Slate"
-    - Background: bg-slate-50 (#F8FAFC)
-    - Text: text-slate-800 (#1E293B)
-    - Primary Accent: bg-sky-600 (#0284C7)
-    - Secondary Accent/Chart: bg-slate-200 (#E2E8F0), border-sky-500 (#0EA5E9)
-    -->
-    <!-- 
-    Application Structure Plan: The application is a single-page portfolio designed to showcase data analysis projects. The structure supports three distinct project types: a code preview with a link (Commissions), a combined code preview and interactive dashboard (Videogames), and a multi-chart dashboard (IBGE). A tab-based navigation controls which project is displayed. The JavaScript logic dynamically renders the appropriate description, code, and visualization for each project.
-    -->
-    <!-- 
-    Visualization & Content Choices: 
-    - Report Info: Projeto 1 - Automação de Comissões. Goal: Showcase coding and problem-solving skills. Viz: Code Snippet Viewer (Apps Script) and a link to the final Google Sheet. Interaction: Syntax highlighting. Justification: Displaying a preview of the actual automation script proves technical competency. The link to the final sheet provides tangible proof of the high-quality output. Method: HTML/Tailwind/Prism.js.
-    - Report Info: Projeto 2 - Dashboard de Vendas de Videogames. Goal: Showcase the process from code to visualization. Viz: Python code snippet and a multi-chart interactive dashboard. Interaction: Tooltips on charts. Justification: This combination demonstrates the full analysis lifecycle, from Python scripting (Pandas, Matplotlib) to interactive web presentation (Chart.js), which is highly effective for a data analyst portfolio. Library: Chart.js, Prism.js.
-    - Report Info: Projeto 3 - Dashboard Demográfico IBGE. Goal: Demonstrate analysis of public, real-world data. Viz: Multi-chart dashboard (Bar, Pie). Interaction: Tooltips. Justification: This combination effectively visualizes geographic and proportional data. Library: Chart.js (Canvas).
-    This approach provides tangible, interactive evidence of the skills described in each project narrative.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -41,6 +23,11 @@
         .project-tab.active {
             background-color: #0284C7;
             color: white;
+        }
+        .project-tab.featured.active {
+            background-color: #0284C7;
+            color: white;
+            border: 2px solid #fbbf24; /* Destaque amarelo */
         }
         .dashboard-grid {
             display: grid;
@@ -106,7 +93,11 @@
                 </div>
 
                 <div class="flex flex-wrap justify-center mb-8 gap-2 md:gap-4">
-                    <button data-project="project1" class="project-tab active text-sm md:text-base font-medium py-2 px-4 rounded-full transition-colors">Automação de Comissões</button>
+                    <button data-project="project4" class="project-tab featured flex items-center text-sm md:text-base font-medium py-2 px-4 rounded-full transition-colors bg-white hover:bg-slate-200">
+                        <svg class="w-4 h-4 mr-2 text-amber-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        Análise de Voos (Destaque)
+                    </button>
+                    <button data-project="project1" class="project-tab text-sm md:text-base font-medium py-2 px-4 rounded-full transition-colors bg-white hover:bg-slate-200">Automação de Comissões</button>
                     <button data-project="project2" class="project-tab text-sm md:text-base font-medium py-2 px-4 rounded-full transition-colors bg-white hover:bg-slate-200">Dashboard de Videogames</button>
                     <button data-project="project3" class="project-tab text-sm md:text-base font-medium py-2 px-4 rounded-full transition-colors bg-white hover:bg-slate-200">Dashboard Demográfico</button>
                 </div>
@@ -362,6 +353,14 @@ if __name__ == '__main__':
                             options: { plugins: { legend: { position: 'top' } } }
                         }
                     ]
+                },
+                project4: {
+                    title: "Análise de Voos na Índia",
+                    isFeatured: true,
+                    tools: "Python (Pandas, Matplotlib, Seaborn)",
+                    type: 'link',
+                    description: `Como projeto de destaque, realizei uma análise exploratória completa de um conjunto de dados com mais de 300.000 voos comerciais na Índia. O objetivo foi extrair insights acionáveis sobre a dinâmica de precificação, a performance das companhias aéreas e os fatores que mais influenciam o custo e a duração das viagens. A análise completa, incluindo visualizações e o código-fonte, está disponível em uma página dedicada.`,
+                    link: "portfolio_analise_de_voos.html"
                 }
             };
 
@@ -472,13 +471,20 @@ if __name__ == '__main__':
 
                 const project = projectsData[projectId];
                 
+                let titleHtml = `<h3 class="text-2xl font-bold text-slate-900 mb-4">${project.title}</h3>`;
+                if(project.isFeatured){
+                    titleHtml = `<h3 class="text-2xl font-bold text-slate-900 mb-1">${project.title}</h3><p class="text-amber-500 font-semibold text-sm mb-4">PROJETO EM DESTAQUE</p>`
+                }
+
                 projectInfoContainer.innerHTML = `
-                    <h3 class="text-2xl font-bold text-slate-900 mb-4">${project.title}</h3>
+                    ${titleHtml}
                     <p class="text-sm text-slate-500 mb-4"><strong>Ferramentas:</strong> ${project.tools}</p>
                     <div class="prose prose-slate max-w-none">${project.description}</div>
                 `;
 
-                if (projectId === 'project2') {
+                if (project.type === 'link') {
+                    projectVisualContainer.innerHTML = `<div class="mt-8 text-center"><a href="${project.link}" target="_blank" class="inline-block bg-sky-600 text-white font-bold py-3 px-8 rounded-full hover:bg-sky-700 transition-transform hover:scale-105">Ver Análise Completa</a></div>`;
+                } else if (projectId === 'project2') {
                     renderDashboardWithCode(project);
                 } else if (project.type === 'code') {
                     renderCode(project);
@@ -489,19 +495,20 @@ if __name__ == '__main__':
                 Prism.highlightAll();
 
                 projectTabs.forEach(tab => {
-                    tab.classList.toggle('active', tab.dataset.project === projectId);
-                    tab.classList.toggle('bg-white', tab.dataset.project !== projectId);
-                    tab.classList.toggle('hover:bg-slate-200', tab.dataset.project !== projectId);
+                    const isCurrentTab = tab.dataset.project === projectId;
+                    tab.classList.toggle('active', isCurrentTab);
+                    tab.classList.toggle('bg-white', !isCurrentTab);
+                    tab.classList.toggle('hover:bg-slate-200', !isCurrentTab);
                 });
             }
 
             projectTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     updateProjectContent(tab.dataset.project);
-});
+                });
             });
             
-            updateProjectContent('project1');
+            updateProjectContent('project4');
 
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
